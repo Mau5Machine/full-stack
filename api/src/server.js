@@ -7,6 +7,7 @@ import typeDefs from './graphql/typeDefs';
 import http from 'http';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 // ! initialize sequelize with session store
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
@@ -23,7 +24,6 @@ app.use(
     store: new SequelizeStore({
       db: db.sequelize,
     }),
-    table: 'sessions',
     resave: false, // we support the touch method so per that express-session docs this should be set to false
     saveUninitialized: false,
     cookie: {
@@ -41,14 +41,22 @@ app.use(
   })
 );
 
+// ! Apollo server creation
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   introspection: true,
+  cors: true,
   context: async ({ req, res, connection }) => {
-    return {
-      db,
-    };
+    if (req) {
+      return {
+        db,
+        res,
+        session: req.session,
+        me: req.session.user,
+        secret: process.env.APP_SECRET,
+      };
+    }
   },
 });
 
@@ -56,7 +64,7 @@ server.applyMiddleware({ app, path: '/graphql', cors: false });
 
 const httpServer = http.createServer(app);
 
-db.sequelize.sync({ force: true }).then(async () => {
+db.sequelize.sync({ force: false }).then(async () => {
   console.log(`database synced!`);
 });
 

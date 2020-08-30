@@ -32,9 +32,15 @@ export default {
       const user = await db.user.create({
         ...input,
       });
+
+      session.user = {
+        id: user.dataValues.id,
+        username: user.dataValues.username,
+      };
+
       return user;
     },
-    login: async (root, { username, password }, { db }, info) => {
+    login: async (root, { username, password }, { db, session }, info) => {
       const user = await db.user.findOne({
         where: { username },
       });
@@ -47,7 +53,18 @@ export default {
         throw new UserInputError('Password is invalid');
       }
 
+      session.user = {
+        id: user.dataValues.id,
+        username: user.dataValues.username,
+      };
+
       return user;
+    },
+    logout: async (root, args, { session, res }, info) => {
+      let loggedOutUser = session.user;
+      await session.destroy();
+      res.clearCookie(process.env.SESSION_NAME);
+      return loggedOutUser;
     },
   },
 };

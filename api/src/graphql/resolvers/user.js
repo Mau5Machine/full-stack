@@ -1,25 +1,33 @@
 import { UserInputError } from 'apollo-server';
 import { Op } from 'sequelize';
+import { isAuthenticated } from './authorization';
+import { combineResolvers } from 'graphql-resolvers';
 
 export default {
   Query: {
     // ! This query is for the logged in user
-    me: async (root, args, { db, me }, info) => {
-      const user = await db.user.findByPk(me.id);
-      return user;
-    },
-    // ! This query grabs all the users
-    users: async (root, args, { db }, info) => {
-      const users = await db.user.findAll();
-      if (!users) {
-        throw new Error('No users found');
+    me: combineResolvers(
+      isAuthenticated,
+      async (root, args, { db, me }, info) => {
+        const user = await db.user.findByPk(me.id);
+        return user;
       }
-      return users;
-    },
+    ),
+    // ! This query grabs all the users
+    users: combineResolvers(
+      isAuthenticated,
+      async (root, args, { db }, info) => {
+        const users = await db.user.findAll();
+        if (!users) {
+          throw new Error('No users found');
+        }
+        return users;
+      }
+    ),
   },
   Mutation: {
     // ! This mutation creates new user
-    createUser: async (root, { input }, { db }) => {
+    createUser: async (root, { input }, { db, session }) => {
       const { username, email } = input;
       const userExists = await db.user.findOne({
         where: {

@@ -64,7 +64,7 @@ server.applyMiddleware({ app, path: '/graphql', cors: false });
 
 const httpServer = http.createServer(app);
 
-db.sequelize.sync({ force: false }).then(async () => {
+db.sequelize.sync({ force: true }).then(async () => {
   console.log(`database synced!`);
 });
 

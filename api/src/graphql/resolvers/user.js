@@ -1,11 +1,14 @@
 import { UserInputError } from 'apollo-server';
 import { Op } from 'sequelize';
-import { isAuthenticated } from './authorization';
+import { isAuthenticated, isSessionAuthenticated } from './authorization';
 import { combineResolvers } from 'graphql-resolvers';
 
 export default {
   Query: {
     // ! This query is for the logged in user
+    isLoggedIn: async (root, args, { session }, info) => {
+      return isSessionAuthenticated(session);
+    },
     me: combineResolvers(
       isAuthenticated,
       async (root, args, { db, me }, info) => {

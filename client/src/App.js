@@ -1,4 +1,17 @@
 import React from 'react';
+import { gql } from 'apollo-boost';
+import client from 'apollo/client';
+
+const isLoggedInQuery = gql`
+  {
+    isLoggedIn
+  }
+`;
+
+const checkLoggedIn = async () => {
+  let data = await client.query({ query: isLoggedInQuery });
+  return data.data.isLoggedIn;
+};
 
 function App() {
   return (

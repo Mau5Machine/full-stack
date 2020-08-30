@@ -17,6 +17,7 @@ export default gql`
   extend type Query {
     me: User
     users: [User!]
+    isLoggedIn: Boolean!
   }
 
   # -----------------------------------------------

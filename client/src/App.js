@@ -1,35 +1,25 @@
 import React from 'react';
-import { gql } from 'apollo-boost';
-import client from 'apollo/client';
-
-const isLoggedInQuery = gql`
-  {
-    isLoggedIn
-  }
-`;
-
-const checkLoggedIn = async () => {
-  let data = await client.query({ query: isLoggedInQuery });
-  return data.data.isLoggedIn;
-};
+import { Router } from 'react-router-dom';
+import { history } from 'history.js';
+import Routes from './Routes';
+import { useQuery } from '@apollo/react-hooks';
+import { isLoggedInQuery } from 'graphql/queries/user';
 
 function App() {
+  const { data, loading, error } = useQuery(isLoggedInQuery, {
+    pollInterval: 5000,
+  });
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{`Error: ${error.message}`}</p>;
+
+  console.log(data);
+  console.log('this is rendered');
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router history={history}>
+        <Routes />
+      </Router>
+    </>
   );
 }
 

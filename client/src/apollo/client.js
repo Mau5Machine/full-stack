@@ -9,7 +9,7 @@ const httpUri =
 
 let link = createHttpLink({
   uri: httpUri,
-  credentials: 'same-origin',
+  credentials: 'include',
 });
 
 const cache = new InMemoryCache();

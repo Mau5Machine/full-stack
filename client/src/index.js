@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ApolloProvider } from '@apollo/react-hooks';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import client from 'apollo/client';
 
 ReactDOM.render(

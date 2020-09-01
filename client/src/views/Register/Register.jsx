@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import { Formik, Form, Field } from "formik";
 import { isLoggedInQuery } from "graphql/queries/user";
-import { loginMutation } from "graphql/mutations/user";
+import { createAccountMutation } from "graphql/mutations/user";
 import { history } from "history.js";
 
-const Login = () => {
-  const [login] = useMutation(loginMutation, {
+const Register = () => {
+  const [createUser] = useMutation(createAccountMutation, {
     refetchQueries: [{ query: isLoggedInQuery }],
     onCompleted: (data) => {
       history.push("/dashboard");
@@ -28,16 +28,25 @@ const Login = () => {
               initialValues={{
                 username: "",
                 password: "",
+                name: "",
+                email: "",
               }}
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(false);
-                login({ variables: { ...values } });
+                createUser({ variables: { ...values } });
+                console.log(values);
               }}
             >
               {({ isSubmitting, setFieldValue, resetForm }) => (
                 <Form>
                   <Col>
                     <Field type="text" name="username" placeholder="Username" />
+                  </Col>
+                  <Col>
+                    <Field type="text" name="name" placeholder="Name" />
+                  </Col>
+                  <Col>
+                    <Field type="text" name="email" placeholder="Email" />
                   </Col>
                   <Col>
                     <Field
@@ -47,10 +56,10 @@ const Login = () => {
                     />
                   </Col>
                   <Col>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">Register</Button>
                   </Col>
                   <Col>
-                    <Link to="/register">Register New Account</Link>
+                    <Link to="/">Login</Link>
                   </Col>
                 </Form>
               )}
@@ -62,4 +71,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

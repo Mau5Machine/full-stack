@@ -25,13 +25,11 @@ const Routes = () => {
       />
       <RouteWithLayout
         component={RegisterView}
-        exact
         layout={MainLayout}
         path="/register"
       />
       <ProtectedRouteWithLayout
         component={DashboardView}
-        exact
         layout={ProtectedLayout}
         path="/dashboard"
       />

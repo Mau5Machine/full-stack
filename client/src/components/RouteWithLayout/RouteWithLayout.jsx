@@ -1,16 +1,14 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
-import { useQuery } from '@apollo/react-hooks';
-import { isLoggedInQuery } from 'graphql/queries/user';
+import React from "react";
+import { Route } from "react-router-dom";
+import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
+import { useQuery } from "@apollo/react-hooks";
+import { isLoggedInClientQuery } from "graphql/queries/user";
 
 export const ProtectedRouteWithLayout = (props) => {
   const { layout: Layout, component: Component, ...rest } = props;
 
-  const { data, error, loading } = useQuery(isLoggedInQuery);
-  if (error) return <Redirect to='/login' />;
-  if (loading) return <p>Loading...</p>;
+  const { data } = useQuery(isLoggedInClientQuery);
 
   return (
     <Route
@@ -21,7 +19,7 @@ export const ProtectedRouteWithLayout = (props) => {
             <Component {...matchProps} />
           </Layout>
         ) : (
-          <Redirect to='/' />
+          <Redirect to="/" />
         )
       }
     />

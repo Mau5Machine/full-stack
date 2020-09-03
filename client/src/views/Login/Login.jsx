@@ -5,12 +5,13 @@ import { useMutation } from "@apollo/react-hooks";
 import { Formik, Form, Field } from "formik";
 import { isLoggedInQuery } from "graphql/queries/user";
 import { loginMutation } from "graphql/mutations/user";
-import { history } from "history.js";
+// import Spinner from "react-spinkit";
 
-const Login = () => {
-  const [login] = useMutation(loginMutation, {
+const Login = (props) => {
+  const { history } = props;
+  const [login, { client }] = useMutation(loginMutation, {
     refetchQueries: [{ query: isLoggedInQuery }],
-    onCompleted: (data) => {
+    onCompleted: () => {
       history.push("/dashboard");
     },
     onError: (err) => {
@@ -26,12 +27,13 @@ const Login = () => {
           <Col>
             <Formik
               initialValues={{
-                username: "",
-                password: "",
+                username: "admin",
+                password: "Random12134$$",
               }}
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(false);
                 login({ variables: { ...values } });
+                client.writeData({ data: { isLoggedIn: true } });
               }}
             >
               {({ isSubmitting, setFieldValue, resetForm }) => (

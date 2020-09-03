@@ -5,9 +5,9 @@ import { useMutation } from "@apollo/react-hooks";
 import { Formik, Form, Field } from "formik";
 import { isLoggedInQuery } from "graphql/queries/user";
 import { createAccountMutation } from "graphql/mutations/user";
-import { history } from "history.js";
 
-const Register = () => {
+const Register = (props) => {
+  const { history } = props;
   const [createUser] = useMutation(createAccountMutation, {
     refetchQueries: [{ query: isLoggedInQuery }],
     onCompleted: (data) => {

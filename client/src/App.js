@@ -13,11 +13,9 @@ function App() {
   console.log(data);
   console.log("this is rendered");
   return (
-    <>
-      <Router history={history}>
-        <Routes />
-      </Router>
-    </>
+    <Router history={history}>
+      <Routes />
+    </Router>
   );
 }
 

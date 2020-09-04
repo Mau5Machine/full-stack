@@ -2,6 +2,7 @@ import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-boost";
 import { isLoggedInQuery } from "graphql/queries/user";
+import { resolvers } from "graphql/resolvers";
 
 const httpUri =
   process.env.NODE_ENV === "development"
@@ -13,11 +14,12 @@ let link = createHttpLink({
   credentials: "include",
 });
 
-const cache = new InMemoryCache();
+export const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   link,
   cache,
+  resolvers,
   fetchOptions: {
     mode: "no-cors",
   },
@@ -28,7 +30,7 @@ const checkLoggedIn = async () => {
     let data = await client.query({ query: isLoggedInQuery });
     cache.writeData({
       data: {
-        isAuth: data.isLoggedIn,
+        isLoggedIn: data.isLoggedIn,
       },
     });
   } catch (err) {
@@ -37,4 +39,5 @@ const checkLoggedIn = async () => {
 };
 
 checkLoggedIn();
+
 export default client;

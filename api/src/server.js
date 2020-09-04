@@ -1,16 +1,16 @@
-require('dotenv').config();
-import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
-import db from './db';
-import resolvers from './graphql/resolvers';
-import typeDefs from './graphql/typeDefs';
-import http from 'http';
-import session from 'express-session';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
+require("dotenv").config();
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import db from "./db";
+import resolvers from "./graphql/resolvers";
+import typeDefs from "./graphql/typeDefs";
+import http from "http";
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
 // ! initialize sequelize with session store
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 // ! Declare express application
 const app = express();
@@ -27,7 +27,7 @@ app.use(
     resave: false, // we support the touch method so per that express-session docs this should be set to false
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV == 'production',
+      secure: process.env.NODE_ENV == "production",
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: false,
     },
@@ -36,7 +36,7 @@ app.use(
 
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: ["http://localhost:21304"],
     credentials: true,
   })
 );
@@ -60,7 +60,7 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app, path: '/graphql', cors: false });
+server.applyMiddleware({ app, path: "/graphql", cors: false });
 
 const httpServer = http.createServer(app);
 

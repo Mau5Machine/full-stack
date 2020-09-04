@@ -1,24 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
-import { useMutation } from "@apollo/react-hooks";
 import { Formik, Form, Field } from "formik";
-import { isLoggedInQuery } from "graphql/queries/user";
-import { loginMutation } from "graphql/mutations/user";
-// import Spinner from "react-spinkit";
+import { login } from "utility/functions";
 
 const Login = (props) => {
   const { history } = props;
-  const [login, { client }] = useMutation(loginMutation, {
-    refetchQueries: [{ query: isLoggedInQuery }],
-    onCompleted: () => {
-      history.push("/dashboard");
-    },
-    onError: (err) => {
-      alert(err.graphQLErrors[0].message);
-      console.log(err);
-    },
-  });
 
   return (
     <div>
@@ -32,8 +19,7 @@ const Login = (props) => {
               }}
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(false);
-                login({ variables: { ...values } });
-                client.writeData({ data: { isLoggedIn: true } });
+                login(values.username, values.password, history);
               }}
             >
               {({ isSubmitting, setFieldValue, resetForm }) => (

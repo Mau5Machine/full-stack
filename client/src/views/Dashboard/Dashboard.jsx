@@ -1,23 +1,40 @@
 import React from "react";
 import { Button } from "reactstrap";
-import { logoutMutation } from "graphql/mutations/user";
-import { useMutation } from "@apollo/react-hooks";
-import { isLoggedInQuery } from "graphql/queries/user";
+import { logout } from "utility/functions";
 import PropTypes from "prop-types";
+import { ThemeContextConsumer } from "utility/Context";
+import { useMutation } from "@apollo/react-hooks";
+import { gql } from "apollo-boost";
+
+const logoutResolver = gql`
+  mutation logout {
+    logout @client
+  }
+`;
+
+const loginResolver = gql`
+  mutation logout {
+    login @client
+  }
+`;
 
 const Dashboard = (props) => {
-  const [logout] = useMutation(logoutMutation, {
-    refetchQueries: [{ query: isLoggedInQuery }],
-    onCompleted: (data) => {
-      console.log(data);
-    },
-  });
+  const [localLogout] = useMutation(logoutResolver);
+  const [localLogin] = useMutation(loginResolver);
 
   return (
-    <div>
-      <h1>Logged In To Account</h1>
-      <Button onClick={logout}>Log out</Button>
-    </div>
+    <ThemeContextConsumer>
+      {(context) => (
+        <div>
+          <h1>{`Currently selected theme ${context.theme}`}</h1>
+          <h2>{`Currently logged in ${context.isLoggedIn}`}</h2>
+          <Button onClick={context.toggleTheme}>Toggle Theme</Button>
+          <Button onClick={logout}>Log out</Button>
+          <Button onClick={localLogout}>Local Log out</Button>
+          <Button onClick={localLogin}>Local Log in</Button>
+        </div>
+      )}
+    </ThemeContextConsumer>
   );
 };
 

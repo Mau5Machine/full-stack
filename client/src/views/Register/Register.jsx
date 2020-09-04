@@ -1,23 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
-import { useMutation } from "@apollo/react-hooks";
 import { Formik, Form, Field } from "formik";
-import { isLoggedInQuery } from "graphql/queries/user";
-import { createAccountMutation } from "graphql/mutations/user";
+import { createAccount } from "utility/functions";
 
 const Register = (props) => {
   const { history } = props;
-  const [createUser] = useMutation(createAccountMutation, {
-    refetchQueries: [{ query: isLoggedInQuery }],
-    onCompleted: (data) => {
-      history.push("/dashboard");
-    },
-    onError: (err) => {
-      alert(err.graphQLErrors[0].message);
-      console.log(err);
-    },
-  });
 
   return (
     <div>
@@ -33,8 +21,7 @@ const Register = (props) => {
               }}
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(false);
-                createUser({ variables: { ...values } });
-                console.log(values);
+                createAccount(values, history);
               }}
             >
               {({ isSubmitting, setFieldValue, resetForm }) => (

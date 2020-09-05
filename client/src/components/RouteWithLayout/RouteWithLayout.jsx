@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 
-const isLoggedIn = gql`
+const isLoggedInQuery = gql`
   {
-    isLoggedIn @client
+    isLoggedIn
   }
 `;
 
 export const ProtectedRouteWithLayout = (props) => {
   const { layout: Layout, component: Component, ...rest } = props;
-  const { data } = useQuery(isLoggedIn);
+  const { data, loading, error } = useQuery(isLoggedInQuery);
+
+  if (loading) return <p>Loading...</p>;
+
   return (
     <Route
       {...rest}

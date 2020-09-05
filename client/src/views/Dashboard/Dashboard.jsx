@@ -19,6 +19,7 @@ const loginResolver = gql`
 `;
 
 const Dashboard = (props) => {
+  const { history } = props;
   const [localLogout] = useMutation(logoutResolver);
   const [localLogin] = useMutation(loginResolver);
 
@@ -29,7 +30,7 @@ const Dashboard = (props) => {
           <h1>{`Currently selected theme ${context.theme}`}</h1>
           <h2>{`Currently logged in ${context.isLoggedIn}`}</h2>
           <Button onClick={context.toggleTheme}>Toggle Theme</Button>
-          <Button onClick={logout}>Log out</Button>
+          <Button onClick={() => logout(history)}>Log out</Button>
           <Button onClick={localLogout}>Local Log out</Button>
           <Button onClick={localLogin}>Local Log in</Button>
         </div>

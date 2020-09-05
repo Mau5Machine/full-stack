@@ -1,25 +1,9 @@
-import client, { cache } from "apollo/client";
+import client from "apollo/client";
 import {
   loginMutation,
   logoutMutation,
   createAccountMutation,
 } from "graphql/mutations/user";
-import { isLoggedInQuery } from "graphql/queries/user";
-import { gql } from "apollo-boost";
-
-const loggedInClient = gql`
-  {
-    isLoggedIn @client
-  }
-`;
-export const isLoggedIn = async () => {
-  try {
-    let data = await cache.readQuery({ query: loggedInClient });
-    console.log(data);
-  } catch (err) {
-    alert(err.graphQLErrors[0].message);
-  }
-};
 
 export const login = async (username, password, history) => {
   try {
@@ -54,12 +38,13 @@ export const createAccount = async (input, history) => {
   }
 };
 
-export const logout = async () => {
+export const logout = async (history) => {
   try {
     await client.mutate({
       mutation: logoutMutation,
     });
     client.writeData({ data: { isLoggedIn: false } });
+    // history.push("/");
   } catch (err) {
     alert(err.graphQLErrors[0].message);
     return err;

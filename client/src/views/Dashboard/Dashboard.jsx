@@ -27,8 +27,12 @@ const Dashboard = (props) => {
     <ThemeContextConsumer>
       {(context) => (
         <div>
-          <h1>{`Currently selected theme ${context.theme}`}</h1>
-          <h2>{`Currently logged in ${context.isLoggedIn}`}</h2>
+          <h1
+            className={`${context.theme}-title`}
+          >{`Currently selected theme ${context.theme}`}</h1>
+          <h2
+            className={`${context.theme}-title`}
+          >{`Currently logged in ${context.isLoggedIn}`}</h2>
           <Button onClick={context.toggleTheme}>Toggle Theme</Button>
           <Button onClick={() => logout(history)}>Log out</Button>
           <Button onClick={localLogout}>Local Log out</Button>

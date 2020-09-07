@@ -43,8 +43,8 @@ export const logout = async (history) => {
     await client.mutate({
       mutation: logoutMutation,
     });
+    history.push("/");
     client.writeData({ data: { isLoggedIn: false } });
-    // history.push("/");
   } catch (err) {
     alert(err.graphQLErrors[0].message);
     return err;

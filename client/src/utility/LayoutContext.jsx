@@ -3,24 +3,12 @@ const { Provider, Consumer } = React.createContext();
 
 class LayoutContextProvider extends Component {
   state = {
-    theme: "dark",
-  };
-
-  componentDidMount() {}
-
-  toggleTheme = () => {
-    this.setState((prevState) => {
-      return {
-        theme: prevState.theme === "dark" ? "light" : "dark",
-      };
-    });
+    user: null,
   };
 
   render() {
     return (
-      <Provider
-        value={{ theme: this.state.theme, toggleTheme: this.toggleTheme }}
-      >
+      <Provider value={{ user: this.state.user }}>
         {this.props.children}
       </Provider>
     );

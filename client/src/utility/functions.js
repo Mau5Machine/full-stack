@@ -4,6 +4,15 @@ import {
   logoutMutation,
   createAccountMutation,
 } from "graphql/mutations/user";
+import { isLoggedInQuery } from "graphql/queries/user";
+
+export const isLoggedIn = async () => {
+  try {
+    return await client.query({ query: isLoggedInQuery });
+  } catch (err) {
+    return err;
+  }
+};
 
 export const login = async (username, password, history) => {
   try {
@@ -30,8 +39,8 @@ export const createAccount = async (input, history) => {
         ...input,
       },
     });
-    client.writeData({ data: { isLoggedIn: true } });
     history.push("/dashboard");
+    client.writeData({ data: { isLoggedIn: true } });
   } catch (err) {
     alert(err.graphQLErrors[0].message);
     return err;

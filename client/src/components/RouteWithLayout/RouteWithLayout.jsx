@@ -5,6 +5,7 @@ import { Redirect } from "react-router-dom";
 import { useApolloClient } from "@apollo/react-hooks";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
+import { isLoggedIn } from "utility/functions";
 
 const isLoggedInQuery = gql`
   query IsUserLoggedIn {
@@ -14,13 +15,13 @@ const isLoggedInQuery = gql`
 
 export const ProtectedRouteWithLayout = (props) => {
   const { layout: Layout, component: Component, ...rest } = props;
+  const [state, setState] = useState(true);
 
-  let loggedIn = true;
   return (
     <Route
       {...rest}
       render={(matchProps) =>
-        loggedIn ? (
+        state ? (
           <Layout>
             <Component {...matchProps} />
           </Layout>
